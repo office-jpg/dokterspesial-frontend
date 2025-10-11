@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "MONO Design Studio",
+  "description": "We create minimalist digital experiences that make an impact. Raw, unfiltered, and straight to the point.",
+  "url": "https://mono.bforbilly.me",
+  "logo": "https://mono.bforbilly.me/placeholder-logo.png",
+  "foundingDate": "2023",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Indonesia",
+    "addressCountry": "ID"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "halimputra0701@icloud.com"
+  },
+  "sameAs": [
+    "https://twitter.com/bforbilly24",
+    "https://instagram.com/bforbilly24",
+    "https://linkedin.com/in/halimp"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Design Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Web Design",
+          "description": "Minimal and brutalist web design services"
+        }
+      },
+      {
+        "@type": "Offer", 
+        "itemOffered": {
+          "@type": "Service",
+          "name": "UI/UX Design",
+          "description": "User interface and experience design"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service", 
+          "name": "Brand Identity",
+          "description": "Complete brand identity design packages"
+        }
+      }
+    ]
+  }
+}

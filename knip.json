@@ -1,0 +1,7 @@
+{
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "entry": ["app/root.tsx", "app/routes.ts", "app/**/*.tsx", "app/**/*.ts"],
+    "project": ["app/**/*.{js,jsx,ts,tsx}"],
+    "ignore": ["**/*.d.ts", "build/**", "dist/**", "node_modules/**"],
+    "ignoreDependencies": ["@types/*"]
+}

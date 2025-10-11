@@ -1,0 +1,6 @@
+Contact: mailto:security@mono.bforbilly.me
+Expires: 2026-08-24T00:00:00.000Z
+Preferred-Languages: en, id
+Canonical: https://mono.bforbilly.me/.well-known/security.txt
+Policy: https://mono.bforbilly.me/security-policy
+Acknowledgments: https://mono.bforbilly.me/security-acknowledgments
