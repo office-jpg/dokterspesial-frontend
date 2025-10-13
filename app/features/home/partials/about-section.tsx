@@ -1,6 +1,7 @@
 import { memo } from "react";
 
 import { motion } from "framer-motion";
+import { Link } from "react-router";
 
 import { Button } from "~/components/atoms/button";
 import MagicCard from "~/components/atoms/magic-card";
@@ -38,7 +39,13 @@ function AboutSection() {
                             transition={{ duration: 0.6, delay: 0.5 }}
                             viewport={{ once: true }}
                         >
-                            <Button size={"lg"}>Mulai Perjalanan Anda</Button>
+                            <Button
+                                asChild
+                                size="lg"
+                                className="bg-foreground/5 dark:bg-foreground/10 text-foreground hover:bg-foreground/10 dark:hover:bg-foreground/20 flex w-full items-center gap-2 px-8 py-3 transition-all duration-300 md:w-fit lg:w-fit"
+                            >
+                                <Link to="/event">Mulai Perjalanan Anda</Link>
+                            </Button>
                         </motion.div>
 
                         <motion.div
