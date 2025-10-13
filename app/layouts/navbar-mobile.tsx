@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "~/components/atoms/button";
+import { Button, buttonVariants } from "~/components/atoms/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/components/atoms/accordion";
 import { ScrollArea } from "~/components/atoms/scroll-area";
 import { NAV_ITEMS } from "~/contents/navigation";
+import { useWhatsAppUrl } from "~/hooks/use-whatsapp";
 import MaxWidthWrapper from "~/components/atoms/max-width-wrapper";
+import { cn } from "~/lib/utils";
 
 interface NavbarMobileProps {
     scrolled: boolean;
@@ -14,6 +16,7 @@ interface NavbarMobileProps {
 export default function NavbarMobile({ scrolled }: NavbarMobileProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [openAccordion, setOpenAccordion] = useState<string>("");
+    const whatsappUrl = useWhatsAppUrl();
 
     const handleNavigation = () => {
         setIsOpen(false);
@@ -208,18 +211,21 @@ export default function NavbarMobile({ scrolled }: NavbarMobileProps) {
                                         </p>
                                     </div>
                                     <div className="space-y-3">
-                                        <Link
-                                            to="/kontak"
+                                        <a
+                                            href={whatsappUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             onClick={handleNavigation}
+                                            className={cn(
+                                                buttonVariants({
+                                                    variant: "default",
+                                                    size: "sm",
+                                                }),
+                                                "w-full font-medium transition-all hover:scale-105"
+                                            )}
                                         >
-                                            <Button
-                                                variant="default"
-                                                size="sm"
-                                                className="w-full font-medium transition-all hover:scale-105"
-                                            >
-                                                Hubungi Kami
-                                            </Button>
-                                        </Link>
+                                            Hubungi Kami
+                                        </a>
                                     </div>
                                 </motion.div>
                             </div>

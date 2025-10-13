@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 
-import { Button } from "~/components/atoms/button";
+import { buttonVariants } from "~/components/atoms/button";
 import MaxWidthWrapper from "~/components/atoms/max-width-wrapper";
 import {
     NavigationMenu,
@@ -15,6 +15,7 @@ import {
 import { ThemeToggleButton } from "~/components/molecules/toggle-theme-button";
 import { MenuListItem } from "~/components/molecules/menu-list-item";
 import { NAV_ITEMS } from "~/contents/navigation";
+import { useWhatsAppUrl } from "~/hooks/use-whatsapp";
 import { cn } from "~/lib/utils";
 
 const BrandLogoSlider = () => {
@@ -78,6 +79,7 @@ export default function NavbarDesktop({ scrolled }: NavbarDesktopProps) {
     const location = useLocation();
     const navigate = useNavigate();
     const pathname = location.pathname;
+    const whatsappUrl = useWhatsAppUrl();
 
     return (
         <header
@@ -227,15 +229,20 @@ export default function NavbarDesktop({ scrolled }: NavbarDesktopProps) {
 
                     <div className="flex items-center gap-4">
                         <ThemeToggleButton />
-                        <Link to="/kontak">
-                            <Button
-                                variant="outline"
-                                size="default"
-                                className="font-medium"
-                            >
-                                Hubungi Kami
-                            </Button>
-                        </Link>
+                        <a
+                            href={whatsappUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cn(
+                                buttonVariants({
+                                    variant: "outline",
+                                    size: "default",
+                                }),
+                                "font-medium"
+                            )}
+                        >
+                            Hubungi Kami
+                        </a>
                     </div>
                 </div>
             </MaxWidthWrapper>

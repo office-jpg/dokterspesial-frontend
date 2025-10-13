@@ -2,14 +2,18 @@ import { memo, useEffect, useRef } from "react";
 
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router";
 
-import { Button } from "~/components/atoms/button";
+import { buttonVariants } from "~/components/atoms/button";
 import { Highlighter } from "~/components/atoms/highlighter";
 import MaxWidthWrapper from "~/components/atoms/max-width-wrapper";
 import { AnimatedBadge } from "~/components/molecules/animated-badge";
+import { useWhatsAppUrl } from "~/hooks/use-whatsapp";
+import { cn } from "~/lib/utils";
 
 function HeroSection() {
     const shapeRef = useRef<HTMLDivElement>(null);
+    const whatsappUrl = useWhatsAppUrl();
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -107,21 +111,33 @@ function HeroSection() {
                             transition={{ duration: 0.5, delay: 0.6 }}
                             className="flex flex-col gap-4 sm:flex-row"
                         >
-                            <Button
-                                variant="default"
-                                size="lg"
-                                className="h-12 px-8 py-3 font-medium tracking-widest uppercase"
+                            <a
+                                href={whatsappUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={cn(
+                                    buttonVariants({
+                                        variant: "default",
+                                        size: "lg",
+                                    }),
+                                    "h-12 px-8 py-3 font-medium tracking-widest uppercase"
+                                )}
                             >
-                                Mulai Program
+                                Daftar Sekarang
                                 <ArrowRight className="ml-2 size-4" />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="h-12 px-8 py-3 font-medium tracking-widest uppercase"
+                            </a>
+                            <Link
+                                to="/event"
+                                className={cn(
+                                    buttonVariants({
+                                        variant: "outline",
+                                        size: "lg",
+                                    }),
+                                    "h-12 px-8 py-3 font-medium tracking-widest uppercase"
+                                )}
                             >
                                 Lihat Program
-                            </Button>
+                            </Link>
                         </motion.div>
 
                         <motion.div
