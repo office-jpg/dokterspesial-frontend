@@ -1,4 +1,4 @@
-import { type ServiceProps } from '~/types'
+import { type Service } from '~/types/api'
 import {
   Carousel,
   CarouselContent,
@@ -9,7 +9,7 @@ import {
 import ServiceList from './service-list'
 
 interface ServiceCarouselProps {
-  services: ServiceProps[]
+  services: Service[]
   customWidth?: string
 }
 

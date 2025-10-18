@@ -8,6 +8,7 @@ import { FlickeringGrid } from "~/components/atoms/flickering-grid";
 import { Icon } from "~/components/atoms/icon";
 import MaxWidthWrapper from "~/components/atoms/max-width-wrapper";
 import SectionHeader from "~/components/atoms/section-header";
+import { sanitizeContentAsHtml } from "~/lib/content-sanitizer";
 import type { BlogProps } from "~/types";
 
 import { BlogDetailBreadcrumb } from "../_components/blog-detail-breadcrumb";
@@ -145,9 +146,46 @@ function BlogDetailSection({ article, latestBlogs }: BlogDetailProps) {
                                     {isHtmlContent ? (
                                         <div
                                             className="rich-content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: content as string,
-                                            }}
+                                            dangerouslySetInnerHTML={sanitizeContentAsHtml(
+                                                content as string,
+                                                {
+                                                    allowedTags: [
+                                                        "p",
+                                                        "br",
+                                                        "strong",
+                                                        "em",
+                                                        "b",
+                                                        "i",
+                                                        "u",
+                                                        "span",
+                                                        "ul",
+                                                        "ol",
+                                                        "li",
+                                                        "h1",
+                                                        "h2",
+                                                        "h3",
+                                                        "h4",
+                                                        "h5",
+                                                        "h6",
+                                                        "a",
+                                                        "blockquote",
+                                                        "img",
+                                                        "div",
+                                                        "pre",
+                                                        "code",
+                                                    ],
+                                                    allowedAttributes: [
+                                                        "href",
+                                                        "target",
+                                                        "rel",
+                                                        "src",
+                                                        "alt",
+                                                        "title",
+                                                        "class",
+                                                    ],
+                                                    enableMarkdown: false,
+                                                }
+                                            )}
                                         />
                                     ) : (
                                         (content as string[]).map(
@@ -163,9 +201,32 @@ function BlogDetailSection({ article, latestBlogs }: BlogDetailProps) {
                                                         <div
                                                             key={index}
                                                             className="rich-content"
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: paragraph,
-                                                            }}
+                                                            dangerouslySetInnerHTML={sanitizeContentAsHtml(
+                                                                paragraph,
+                                                                {
+                                                                    allowedTags: [
+                                                                        "p",
+                                                                        "br",
+                                                                        "strong",
+                                                                        "em",
+                                                                        "b",
+                                                                        "i",
+                                                                        "u",
+                                                                        "span",
+                                                                        "ul",
+                                                                        "ol",
+                                                                        "li",
+                                                                        "a",
+                                                                        "blockquote",
+                                                                    ],
+                                                                    allowedAttributes: [
+                                                                        "href",
+                                                                        "target",
+                                                                        "rel",
+                                                                    ],
+                                                                    enableMarkdown: false,
+                                                                }
+                                                            )}
                                                         />
                                                     );
                                                 } else {

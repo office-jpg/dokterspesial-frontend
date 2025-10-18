@@ -1,14 +1,15 @@
-import { useLoaderData, useSearchParams } from "react-router";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useLoaderData, useSearchParams } from "react-router";
+
+import { Button } from "~/components/atoms/button";
 import { FlickeringGrid } from "~/components/atoms/flickering-grid";
+import { Icon } from "~/components/atoms/icon";
 import MaxWidthWrapper from "~/components/atoms/max-width-wrapper";
 import SectionHeader from "~/components/atoms/section-header";
 import { ServiceFilter } from "~/features/service/_components/service-filter";
-import { ServicePagination } from "~/features/service/_components/service-pagination";
 import ServiceList from "~/features/service/_components/service-list";
-import { Icon } from "~/components/atoms/icon";
-import { Button } from "~/components/atoms/button";
+import { ServicePagination } from "~/features/service/_components/service-pagination";
 
 interface ServiceSectionProps {
     serviceList: any;
@@ -47,7 +48,7 @@ export function ServiceSection({
     statusFilter: initialStatusFilter,
     spesialistFilter: initialSpesialistFilter,
     typeFilter: initialTypeFilter,
-    categoryFilter: initialCategoryFilter
+    categoryFilter: initialCategoryFilter,
 }: ServiceSectionProps) {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
@@ -55,23 +56,32 @@ export function ServiceSection({
     const [isExpanded, setIsExpanded] = useState(true);
     const [shouldShowLoading, setShouldShowLoading] = useState(false);
 
-    // Local filter states
-    const [selectedStatuses, setSelectedStatuses] = useState<string[]>(initialStatusFilter || []);
-    const [selectedSpesialists, setSelectedSpesialists] = useState<string[]>(initialSpesialistFilter || []);
-    const [selectedTypes, setSelectedTypes] = useState<string[]>(initialTypeFilter || []);
-    const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategoryFilter || []);
+    const [selectedStatuses, setSelectedStatuses] = useState<string[]>(
+        initialStatusFilter || []
+    );
+    const [selectedSpesialists, setSelectedSpesialists] = useState<string[]>(
+        initialSpesialistFilter || []
+    );
+    const [selectedTypes, setSelectedTypes] = useState<string[]>(
+        initialTypeFilter || []
+    );
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(
+        initialCategoryFilter || []
+    );
 
-    // Debounced search value
     const debouncedSearchTerm = useDebounce(searchTerm, 800);
 
-    // Check if there are active filters
-    const activeFilterCount = selectedStatuses.length + selectedSpesialists.length + selectedTypes.length + selectedCategories.length;
+    const activeFilterCount =
+        selectedStatuses.length +
+        selectedSpesialists.length +
+        selectedTypes.length +
+        selectedCategories.length;
     const hasActiveFilters = activeFilterCount > 0;
 
     useEffect(() => {
         const updateParams = () => {
             const newParams = new URLSearchParams(searchParams);
-            
+
             if (debouncedSearchTerm.trim()) {
                 newParams.set("search", debouncedSearchTerm);
             } else {
@@ -109,73 +119,84 @@ export function ServiceSection({
         setSearchTerm(value);
     }, []);
 
-    const handleStatusChange = useCallback((status: string) => {
-        const newStatuses = selectedStatuses.includes(status)
-            ? selectedStatuses.filter(s => s !== status)
-            : [...selectedStatuses, status];
-        
-        setSelectedStatuses(newStatuses);
-        
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete("status");
-        newParams.delete("page");
-        
-        newStatuses.forEach(s => newParams.append("status", s));
-        
-        setSearchParams(newParams, { preventScrollReset: true });
-    }, [selectedStatuses, searchParams, setSearchParams]);
+    const handleStatusChange = useCallback(
+        (status: string) => {
+            const newStatuses = selectedStatuses.includes(status)
+                ? selectedStatuses.filter((s) => s !== status)
+                : [...selectedStatuses, status];
 
-    const handleSpesialistChange = useCallback((spesialist: string) => {
-        const newSpesialists = selectedSpesialists.includes(spesialist)
-            ? selectedSpesialists.filter(s => s !== spesialist)
-            : [...selectedSpesialists, spesialist];
-        
-        setSelectedSpesialists(newSpesialists);
-        
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete("spesialist");
-        newParams.delete("page");
-        
-        newSpesialists.forEach(s => newParams.append("spesialist", s));
-        
-        setSearchParams(newParams, { preventScrollReset: true });
-    }, [selectedSpesialists, searchParams, setSearchParams]);
+            setSelectedStatuses(newStatuses);
 
-    const handleTypeChange = useCallback((type: string) => {
-        const newTypes = selectedTypes.includes(type)
-            ? selectedTypes.filter(t => t !== type)
-            : [...selectedTypes, type];
-        
-        setSelectedTypes(newTypes);
-        
-        // Clear specialists when type selection changes
-        setSelectedSpesialists([]);
-        
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete("page");
-        newParams.delete("spesialist");
-        newParams.delete("type");
-        
-        newTypes.forEach(t => newParams.append("type", t));
-        
-        setSearchParams(newParams, { preventScrollReset: true });
-    }, [selectedTypes, searchParams, setSearchParams]);
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete("status");
+            newParams.delete("page");
 
-    const handleCategoryChange = useCallback((category: string) => {
-        const newCategories = selectedCategories.includes(category)
-            ? selectedCategories.filter(c => c !== category)
-            : [...selectedCategories, category];
-        
-        setSelectedCategories(newCategories);
-        
-        const newParams = new URLSearchParams(searchParams);
-        newParams.delete("page");
-        newParams.delete("category");
-        
-        newCategories.forEach(c => newParams.append("category", c));
-        
-        setSearchParams(newParams, { preventScrollReset: true });
-    }, [selectedCategories, searchParams, setSearchParams]);
+            newStatuses.forEach((s) => newParams.append("status", s));
+
+            setSearchParams(newParams, { preventScrollReset: true });
+        },
+        [selectedStatuses, searchParams, setSearchParams]
+    );
+
+    const handleSpesialistChange = useCallback(
+        (spesialist: string) => {
+            const newSpesialists = selectedSpesialists.includes(spesialist)
+                ? selectedSpesialists.filter((s) => s !== spesialist)
+                : [...selectedSpesialists, spesialist];
+
+            setSelectedSpesialists(newSpesialists);
+
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete("spesialist");
+            newParams.delete("page");
+
+            newSpesialists.forEach((s) => newParams.append("spesialist", s));
+
+            setSearchParams(newParams, { preventScrollReset: true });
+        },
+        [selectedSpesialists, searchParams, setSearchParams]
+    );
+
+    const handleTypeChange = useCallback(
+        (type: string) => {
+            const newTypes = selectedTypes.includes(type)
+                ? selectedTypes.filter((t) => t !== type)
+                : [...selectedTypes, type];
+
+            setSelectedTypes(newTypes);
+
+            setSelectedSpesialists([]);
+
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete("page");
+            newParams.delete("spesialist");
+            newParams.delete("type");
+
+            newTypes.forEach((t) => newParams.append("type", t));
+
+            setSearchParams(newParams, { preventScrollReset: true });
+        },
+        [selectedTypes, searchParams, setSearchParams]
+    );
+
+    const handleCategoryChange = useCallback(
+        (category: string) => {
+            const newCategories = selectedCategories.includes(category)
+                ? selectedCategories.filter((c) => c !== category)
+                : [...selectedCategories, category];
+
+            setSelectedCategories(newCategories);
+
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete("page");
+            newParams.delete("category");
+
+            newCategories.forEach((c) => newParams.append("category", c));
+
+            setSearchParams(newParams, { preventScrollReset: true });
+        },
+        [selectedCategories, searchParams, setSearchParams]
+    );
 
     const handleClearFilters = useCallback(() => {
         setSearchTerm("");
@@ -183,7 +204,7 @@ export function ServiceSection({
         setSelectedSpesialists([]);
         setSelectedTypes([]);
         setSelectedCategories([]);
-        
+
         const newParams = new URLSearchParams();
         setSearchParams(newParams, { preventScrollReset: true });
     }, [setSearchParams]);
@@ -195,48 +216,74 @@ export function ServiceSection({
         return serviceList.filters.spesialists;
     }, [selectedTypes, serviceList.filters?.spesialists, serviceSpesialists]);
 
-    // Helper functions for ServiceFilter interface
     const getSelectedTypeName = () => {
         if (selectedTypes.length === 0) return "";
-        return selectedTypes.map(typeSlug => 
-            serviceTypes.data?.find((t: any) => t.slug === typeSlug)?.name || ""
-        ).filter(Boolean).join(", ");
+        return selectedTypes
+            .map(
+                (typeSlug) =>
+                    serviceTypes.data?.find((t: any) => t.slug === typeSlug)
+                        ?.name || ""
+            )
+            .filter(Boolean)
+            .join(", ");
     };
 
     const getSelectedCategoryName = () => {
         if (selectedCategories.length === 0) return "";
-        return selectedCategories.map(categorySlug => 
-            serviceCategories.data?.find((c: any) => c.slug === categorySlug)?.name || ""
-        ).filter(Boolean).join(", ");
+        return selectedCategories
+            .map(
+                (categorySlug) =>
+                    serviceCategories.data?.find(
+                        (c: any) => c.slug === categorySlug
+                    )?.name || ""
+            )
+            .filter(Boolean)
+            .join(", ");
     };
 
     const getSelectedSpesialistName = () => {
         if (selectedSpesialists.length === 0) return "";
-        return availableSpesialists.find((s: any) => s.slug === selectedSpesialists[0])?.name || "";
+        return (
+            availableSpesialists.find(
+                (s: any) => s.slug === selectedSpesialists[0]
+            )?.name || ""
+        );
     };
 
-    // Adapter functions for the interface
-    const handleTypeToggle = useCallback((typeSlug: string) => {
-        handleTypeChange(typeSlug);
-    }, [handleTypeChange]);
+    const handleTypeToggle = useCallback(
+        (typeSlug: string) => {
+            handleTypeChange(typeSlug);
+        },
+        [handleTypeChange]
+    );
 
-    const handleCategoryToggle = useCallback((categorySlug: string) => {
-        handleCategoryChange(categorySlug);
-    }, [handleCategoryChange]);
+    const handleCategoryToggle = useCallback(
+        (categorySlug: string) => {
+            handleCategoryChange(categorySlug);
+        },
+        [handleCategoryChange]
+    );
 
-    const handleSpesialistToggle = useCallback((spesialistName: string) => {
-        const spesialist = availableSpesialists.find((s: any) => s.name === spesialistName);
-        if (spesialist) {
-            handleSpesialistChange(spesialist.slug);
-        }
-    }, [availableSpesialists, handleSpesialistChange]);
+    const handleSpesialistToggle = useCallback(
+        (spesialistName: string) => {
+            const spesialist = availableSpesialists.find(
+                (s: any) => s.name === spesialistName
+            );
+            if (spesialist) {
+                handleSpesialistChange(spesialist.slug);
+            }
+        },
+        [availableSpesialists, handleSpesialistChange]
+    );
 
-    const handleStatusToggle = useCallback((statusKey: string) => {
-        handleStatusChange(statusKey);
-    }, [handleStatusChange]);
+    const handleStatusToggle = useCallback(
+        (statusKey: string) => {
+            handleStatusChange(statusKey);
+        },
+        [handleStatusChange]
+    );
 
     const forceRefetch = useCallback(() => {
-        // This can be implemented to force refetch data
         window.location.reload();
     }, []);
 
@@ -265,22 +312,21 @@ export function ServiceSection({
                     <div className="w-full">
                         <div className="mb-6">
                             <ServiceFilter
-                                // Filter state
                                 searchInput={searchTerm}
-                                isSearchPending={searchTerm !== debouncedSearchTerm}
+                                isSearchPending={
+                                    searchTerm !== debouncedSearchTerm
+                                }
                                 selectedTypes={selectedTypes}
                                 selectedCategories={selectedCategories}
-                                selectedSpesialist={selectedSpesialists[0] || ""}
+                                selectedSpesialist={
+                                    selectedSpesialists[0] || ""
+                                }
                                 selectedStatuses={selectedStatuses}
                                 isExpanded={isExpanded}
-                                
-                                // Data
                                 types={serviceTypes.data || []}
                                 categories={serviceCategories.data || []}
                                 availableSpesialists={availableSpesialists}
                                 pagination={serviceList.pagination}
-                                
-                                // Handlers
                                 onSearchInputChange={handleSearchChange}
                                 onTypeToggle={handleTypeToggle}
                                 onCategoryToggle={handleCategoryToggle}
@@ -288,49 +334,60 @@ export function ServiceSection({
                                 onStatusToggle={handleStatusToggle}
                                 onReset={handleClearFilters}
                                 onExpandedChange={setIsExpanded}
-                                
-                                // Filter info
                                 filterInfo={{
                                     hasActiveFilters: hasActiveFilters,
-                                    activeFilterCount: activeFilterCount
+                                    activeFilterCount: activeFilterCount,
                                 }}
-                                
-                                // Selected names for display
                                 selectedTypeName={getSelectedTypeName()}
                                 selectedCategoryName={getSelectedCategoryName()}
                                 selectedSpesialistName={getSelectedSpesialistName()}
                             />
                         </div>
 
-                        {/* Service List Content */}
-                        <div className="flex-1 min-w-0">
+                        <div className="min-w-0 flex-1">
                             {serviceList.data && serviceList.data.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-                                    {serviceList.data.map((service: any, index: any) => (
-                                        <ServiceList key={service.id} service={service} index={index} />
-                                    ))}
+                                <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
+                                    {serviceList.data.map(
+                                        (service: any, index: any) => (
+                                            <ServiceList
+                                                key={service.id}
+                                                service={service}
+                                                index={index}
+                                            />
+                                        )
+                                    )}
                                 </div>
                             ) : (
-                                <div className="text-center py-12">
-                                    <div className="w-24 h-24 mx-auto mb-4 text-gray-300">
-                                        <Icon icon="ph:magnifying-glass" className="w-full h-full" />
+                                <div className="py-12 text-center">
+                                    <div className="mx-auto mb-4 h-24 w-24 text-gray-300">
+                                        <Icon
+                                            icon="ph:magnifying-glass"
+                                            className="h-full w-full"
+                                        />
                                     </div>
-                                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                                        {searchTerm ? "Tidak ada layanan ditemukan" : "Belum ada layanan"}
+                                    <h3 className="mb-2 text-lg font-medium text-gray-900">
+                                        {searchTerm
+                                            ? "Tidak ada layanan ditemukan"
+                                            : "Belum ada layanan"}
                                     </h3>
-                                    <p className="text-gray-500 mb-6">
-                                        {searchTerm 
+                                    <p className="mb-6 text-gray-500">
+                                        {searchTerm
                                             ? `Tidak ditemukan layanan yang sesuai dengan pencarian "${searchTerm}"`
-                                            : "Saat ini belum ada layanan yang tersedia"
-                                        }
+                                            : "Saat ini belum ada layanan yang tersedia"}
                                     </p>
                                     {(searchTerm || hasActiveFilters) && (
                                         <Button
-                                            onClick={() => window.location.href = '/service'}
+                                            onClick={() =>
+                                                (window.location.href =
+                                                    "/service")
+                                            }
                                             variant="outline"
                                             className="mx-auto"
                                         >
-                                            <Icon icon="ph:arrow-clockwise" className="h-4 w-4 mr-2" />
+                                            <Icon
+                                                icon="ph:arrow-clockwise"
+                                                className="mr-2 h-4 w-4"
+                                            />
                                             Reset Filter
                                         </Button>
                                     )}
@@ -339,9 +396,23 @@ export function ServiceSection({
 
                             <ServicePagination
                                 page={serviceList.pagination?.current_page || 1}
-                                totalPages={serviceList.pagination?.last_page || 1}
-                                from={((serviceList.pagination?.current_page || 1) - 1) * (serviceList.pagination?.per_page || 6) + 1}
-                                to={Math.min((serviceList.pagination?.current_page || 1) * (serviceList.pagination?.per_page || 6), serviceList.pagination?.total || 0)}
+                                totalPages={
+                                    serviceList.pagination?.last_page || 1
+                                }
+                                from={
+                                    ((serviceList.pagination?.current_page ||
+                                        1) -
+                                        1) *
+                                        (serviceList.pagination?.per_page ||
+                                            6) +
+                                    1
+                                }
+                                to={Math.min(
+                                    (serviceList.pagination?.current_page ||
+                                        1) *
+                                        (serviceList.pagination?.per_page || 6),
+                                    serviceList.pagination?.total || 0
+                                )}
                                 total={serviceList.pagination?.total || 0}
                             />
                         </div>

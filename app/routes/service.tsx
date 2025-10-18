@@ -6,8 +6,8 @@ import { getServiceSpesialists } from "~/actions/service/get-service-spesialists
 import { getServiceTypes } from "~/actions/service/get-service-types";
 import { ScheduleInfoSection } from "~/features/product/partials/schedule-info-section";
 import { ServiceSection } from "~/features/service/partials/service-section";
+import { createBreadcrumbSchema, createServiceListSchema } from "~/lib/json-ld";
 import { siteConfig } from "~/lib/site";
-import { createServiceListSchema, createBreadcrumbSchema } from "~/lib/json-ld";
 
 import type { Route } from "./+types/service";
 
@@ -20,7 +20,6 @@ export async function loader({ request }: Route.LoaderArgs) {
     const categoryFilter = url.searchParams.getAll("category");
     const spesialistFilter = url.searchParams.getAll("spesialist");
 
-    // Set default status filter if none provided
     const defaultStatuses =
         statusFilter.length > 0 ? statusFilter : ["berlangsung", "akan datang"];
     const statusString = defaultStatuses.join(",");
@@ -62,17 +61,29 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export function meta({ data }: Route.MetaArgs) {
     const title = "Event - Dokter Spesial";
-    const description = "Temukan berbagai program pelatihan medis berkelanjutan: webinar, workshop, dan event untuk dokter spesialis. Kategori: Basic Pain, Bedah Series, Cardiac, Endodontics, Orthodontics, Periodontics, dan lebih banyak lagi.";
+    const description =
+        "Temukan berbagai program pelatihan medis berkelanjutan: webinar, workshop, dan event untuk dokter spesialis. Kategori: Basic Pain, Bedah Series, Cardiac, Endodontics, Orthodontics, Periodontics, dan lebih banyak lagi.";
     const url = `${siteConfig.url}/service`;
     const ogImage = `${siteConfig.url}${siteConfig.ogImage}`;
 
-    // Build keywords from filters
     const specializations = [
-        "Basic Pain", "Bedah Series", "Blind Injection", "C-Arm Guided",
-        "Cardiac", "Dry Needling", "Endodontics", "Facial Nerve Pain",
-        "Ginekologi", "Orthodontics", "Orthopedi", "Pediatri",
-        "Periodontics", "Platelet-Rich Plasma", "Prolotherapy",
-        "USG Interventional Pain Management", "Urologi"
+        "Basic Pain",
+        "Bedah Series",
+        "Blind Injection",
+        "C-Arm Guided",
+        "Cardiac",
+        "Dry Needling",
+        "Endodontics",
+        "Facial Nerve Pain",
+        "Ginekologi",
+        "Orthodontics",
+        "Orthopedi",
+        "Pediatri",
+        "Periodontics",
+        "Platelet-Rich Plasma",
+        "Prolotherapy",
+        "USG Interventional Pain Management",
+        "Urologi",
     ];
 
     const keywords = [
@@ -88,32 +99,29 @@ export function meta({ data }: Route.MetaArgs) {
         { title },
         { name: "description", content: description },
         { name: "keywords", content: keywords },
-        
-        // Open Graph
+
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
         { property: "og:image", content: ogImage },
-        
-        // Twitter
+
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
         { name: "twitter:image", content: ogImage },
-        
-        // Additional
+
         { name: "robots", content: "index, follow" },
         { rel: "canonical", href: url },
-        
-        // JSON-LD structured data
+
         {
             "script:ld+json": createServiceListSchema({
-                services: data?.serviceList?.data?.map((service: any) => ({
-                    name: service.title,
-                    description: service.description,
-                    slug: service.slug,
-                })) || [],
+                services:
+                    data?.serviceList?.data?.map((service: any) => ({
+                        name: service.title,
+                        description: service.description,
+                        slug: service.slug,
+                    })) || [],
             }),
         },
         {

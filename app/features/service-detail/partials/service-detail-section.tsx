@@ -16,6 +16,7 @@ import {
     useWhatsAppRecordingUrl,
     useWhatsAppServiceUrl,
 } from "~/hooks/use-whatsapp";
+import { sanitizeContentAsHtml } from "~/lib/content-sanitizer";
 import { type ServiceProps } from "~/types";
 import {
     generateAltText,
@@ -374,11 +375,35 @@ export function ServiceDetailSection({ service }: ServiceDetailSectionProps) {
                                 </h3>
                                 <div
                                     className="prose prose-gray dark:prose-invert text-muted-foreground rich-content max-w-none leading-relaxed"
-                                    dangerouslySetInnerHTML={{
-                                        __html:
-                                            service.description ||
+                                    dangerouslySetInnerHTML={sanitizeContentAsHtml(
+                                        service.description ||
                                             "Deskripsi tidak tersedia.",
-                                    }}
+                                        {
+                                            allowedTags: [
+                                                "p",
+                                                "br",
+                                                "strong",
+                                                "em",
+                                                "b",
+                                                "i",
+                                                "u",
+                                                "span",
+                                                "ul",
+                                                "ol",
+                                                "li",
+                                                "h1",
+                                                "h2",
+                                                "h3",
+                                                "h4",
+                                                "h5",
+                                                "h6",
+                                                "a",
+                                                "blockquote",
+                                            ],
+                                            allowedAttributes: ["href", "target", "rel"],
+                                            enableMarkdown: false,
+                                        }
+                                    )}
                                 />
                             </div>
 
@@ -459,11 +484,22 @@ export function ServiceDetailSection({ service }: ServiceDetailSectionProps) {
                                                 </div>
                                                 <div
                                                     className="text-muted-foreground leading-relaxed"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html:
-                                                            review.comment ||
+                                                    dangerouslySetInnerHTML={sanitizeContentAsHtml(
+                                                        review.comment ||
                                                             "Tidak ada komentar.",
-                                                    }}
+                                                        {
+                                                            allowedTags: [
+                                                                "p",
+                                                                "br",
+                                                                "strong",
+                                                                "em",
+                                                                "b",
+                                                                "i",
+                                                                "u",
+                                                            ],
+                                                            enableMarkdown: false,
+                                                        }
+                                                    )}
                                                 />
                                             </div>
                                         ))}

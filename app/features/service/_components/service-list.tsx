@@ -9,6 +9,7 @@ import { Button } from "~/components/atoms/button";
 import { Card } from "~/components/atoms/card";
 import { Icon } from "~/components/atoms/icon";
 import { Marquee } from "~/components/atoms/marquee";
+import { sanitizeContentAsText } from "~/lib/content-sanitizer";
 import { type ServiceType } from "~/types";
 import { type Service } from "~/types/api";
 import {
@@ -87,14 +88,12 @@ const ServiceList = ({ service, types, customWidth }: ServiceListProps) => {
 
                     <div className="flex min-w-0 flex-1 flex-col justify-between">
                         <div className="flex h-full w-full flex-col justify-start gap-2">
-                            <h3 className="text-foreground group-hover:text-tertiary line-clamp-2 h-12 max-h-12 text-sm leading-tight font-semibold transition-colors duration-200 sm:text-base md:max-h-10">
+                            <h3 className="text-foreground group-hover:text-tertiary line-clamp-2 max-h-10 text-sm leading-tight font-semibold transition-colors duration-200 sm:text-base md:max-h-10">
                                 {service.name}
                             </h3>
 
-                            {/* Price below title for both mobile and desktop */}
                             <div className="flex flex-row items-center justify-start">
                                 {(() => {
-                                    // Handle both object and number price formats
                                     const currentPrice =
                                         typeof service.price === "object" &&
                                         service.price !== null
@@ -326,7 +325,6 @@ const ServiceList = ({ service, types, customWidth }: ServiceListProps) => {
                                                 service.spesialists &&
                                                 service.spesialists.length > 0
                                             ) {
-                                                // If multiple specialists, use marquee with individual badges
                                                 if (
                                                     service.spesialists.length >
                                                     1
@@ -369,7 +367,7 @@ const ServiceList = ({ service, types, customWidth }: ServiceListProps) => {
                                                         </div>
                                                     );
                                                 }
-                                                // Single specialist, no marquee needed
+
                                                 const specialist =
                                                     service.spesialists[0];
                                                 const specialistName =
@@ -378,7 +376,6 @@ const ServiceList = ({ service, types, customWidth }: ServiceListProps) => {
                                                         ? specialist
                                                         : specialist.name;
 
-                                                // Check if text is long (more than 15 characters)
                                                 const isLongText =
                                                     specialistName.length > 15;
 
@@ -431,17 +428,17 @@ const ServiceList = ({ service, types, customWidth }: ServiceListProps) => {
                     {service.description && (
                         <div className="w-full">
                             <p className="text-muted-foreground line-clamp-2 text-xs">
-                                {service.description}
+                                {sanitizeContentAsText(service.description)}
                             </p>
                         </div>
                     )}
 
                     <div className="flex w-full flex-row items-center justify-between gap-3 border-t border-gray-200 pt-2 dark:border-gray-600">
-                        <div className="flex flex-row items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                        <div className="flex min-w-0 flex-1 flex-row items-center gap-2 sm:gap-3">
                             {service.presenters &&
                             service.presenters.length > 0 ? (
                                 <>
-                                    <div className="flex items-center -space-x-1 sm:-space-x-2 flex-shrink-0">
+                                    <div className="flex flex-shrink-0 items-center -space-x-1 sm:-space-x-2">
                                         <Avatar className="size-7 border-2 border-white sm:size-8 dark:border-slate-900">
                                             <AvatarFallback className="bg-foreground text-xs font-semibold text-white">
                                                 {service.presenters[0].name
@@ -460,12 +457,15 @@ const ServiceList = ({ service, types, customWidth }: ServiceListProps) => {
                                     </div>
                                     <div className="min-w-0 overflow-hidden">
                                         <div className="flex items-center gap-1">
-                                            <p className="text-foreground truncate text-xs font-semibold sm:text-sm flex-shrink min-w-0">
+                                            <p className="text-foreground min-w-0 flex-shrink truncate text-xs font-semibold sm:text-sm">
                                                 {service.presenters[0].name}
                                             </p>
                                             {service.presenters.length > 1 && (
-                                                <span className="text-xs font-normal text-gray-500 whitespace-nowrap flex-shrink-0">
-                                                    & {service.presenters.length - 1} lainnya
+                                                <span className="flex-shrink-0 text-xs font-normal whitespace-nowrap text-gray-500">
+                                                    &{" "}
+                                                    {service.presenters.length -
+                                                        1}{" "}
+                                                    lainnya
                                                 </span>
                                             )}
                                         </div>
